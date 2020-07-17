@@ -10,9 +10,13 @@ import UIKit
 
 class BigMovieCell: UICollectionViewCell {
 
+    @IBOutlet weak var posterImage: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        posterImage.layer.cornerRadius = 12
+        
     }
 
 }

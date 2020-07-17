@@ -21,12 +21,16 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         //self.collectionView = .init(frame: view.bounds, collectionViewLayout: createLayout())
+        
         self.collectionView.collectionViewLayout = createLayout()
         //self.collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         //self.collectionView.backgroundColor = .systemBackground
         let bigCell = UINib(nibName: "BigMovieCell", bundle: nil)
         
         self.collectionView.register(bigCell, forCellWithReuseIdentifier: "bigCell")
+        self.collectionView.register(HeaderView.self, forSupplementaryViewOfKind: "HeaderViewKind", withReuseIdentifier: HeaderView.identifier)
+        self.collectionView.register(CategoryCell.self, forCellWithReuseIdentifier: "categoryCell")
+        
         self.view.addSubview(collectionView)
         
         createDataSource()
@@ -35,23 +39,44 @@ class ViewController: UIViewController {
     func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout {
             (sectionIndex: Int, layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
-            let leadingItem = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.7), heightDimension: .fractionalHeight(1.0)))
-
-            leadingItem.contentInsets = NSDirectionalEdgeInsets(top: 5.0, leading: 5.0, bottom: 5.0, trailing: 5.0)
             
-            let trailingItem = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(0.5)))
-            trailingItem.contentInsets = NSDirectionalEdgeInsets(top: 5.0, leading: 5.0, bottom: 5.0, trailing: 5.0)
-
-            let trailingGroup = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.3), heightDimension: .fractionalHeight(1.0)), subitem: trailingItem, count: 2)
+            if sectionIndex == 0 {
+                let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
+                
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .absolute(200), heightDimension: .absolute(300)), subitems: [item])
+                group.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 10)
+                            
+                let headerItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(44.0)), elementKind: "HeaderViewKind", alignment: .topLeading)
+                headerItem.pinToVisibleBounds = true
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.boundarySupplementaryItems = [headerItem]
+                section.contentInsets = .init(top: 10, leading: 20, bottom: 0, trailing: 0)
+                section.orthogonalScrollingBehavior = .continuous
+                
+                return section
+            }
+            else {
+                let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
+                item.contentInsets.trailing = 10
+                item.contentInsets.bottom = 10
+                
+                let verticalGroup = NSCollectionLayoutGroup.vertical(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)), subitem: item, count: 3)
+                
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .absolute(200), heightDimension: .fractionalHeight(0.3)), subitems: [verticalGroup])
+                group.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 10)
+                            
+                let headerItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(44.0)), elementKind: "HeaderViewKind", alignment: .topLeading)
+                headerItem.pinToVisibleBounds = true
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.boundarySupplementaryItems = [headerItem]
+                section.contentInsets = .init(top: 10, leading: 20, bottom: 0, trailing: 0)
+                section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
+                
+                return section
+            }
             
-            let nestedGroup = NSCollectionLayoutGroup.horizontal(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.4)), subitems: [leadingItem, trailingGroup])
-            nestedGroup.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 5)
-            
-            let section = NSCollectionLayoutSection(group: nestedGroup)
-            section.contentInsets = NSDirectionalEdgeInsets(top: 5.0, leading: 5.0, bottom: 5.0, trailing: 5.0)
-            section.orthogonalScrollingBehavior = .paging
-            
-            return section
             
         }
         return layout
@@ -60,22 +85,48 @@ class ViewController: UIViewController {
     func createDataSource() {
         dataSource = .init(collectionView: self.collectionView) { (collectionView, indexPath, item) -> UICollectionViewCell? in
             
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "bigCell", for: indexPath) as? BigMovieCell else { fatalError("Can't dequeue cell with identifier bigCell") }
+            if indexPath.section == 0 {
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "bigCell", for: indexPath) as? BigMovieCell else { fatalError("Can't dequeue cell with identifier bigCell") }
+                
+                return cell
+            }
+            else {
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "categoryCell", for: indexPath) as? CategoryCell else { fatalError("Can't dequeue cell with identifier categoryCell") }
+                
+                return cell
+            }
             
-            cell.layer.shadowRadius = 30
-            cell.layer.shadowColor = UIColor.black.cgColor
-            cell.layer.shadowOpacity = 0.3
             
-            return cell
+        }
+        
+        dataSource.supplementaryViewProvider = { (collectionView: UICollectionView, kind: String, indexPath: IndexPath) -> UICollectionReusableView? in
+            
+            if kind == "HeaderViewKind" {
+                if let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderView.identifier, for: indexPath) as? HeaderView {
+                    
+                    if indexPath.section == 0 {
+                        headerView.nameLabel.text = "Популярно"
+                    }
+                    else {
+                        headerView.nameLabel.text = "Категории"
+                    }
+                    
+                    return headerView
+                }
+            }
+            
+            return nil
         }
         
         var snapshot = NSDiffableDataSourceSnapshot<Section, Int>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(Array(0...100))
+        snapshot.appendSections([.main, .categories])
+        snapshot.appendItems(Array(0...10), toSection: .main)
+        snapshot.appendItems(Array(11...20), toSection: .categories)
         dataSource.apply(snapshot)
     }
 }
 
-enum Section {
+enum Section: Int, CaseIterable {
     case main
+    case categories
 }

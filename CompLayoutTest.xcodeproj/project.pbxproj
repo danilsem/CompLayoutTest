@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8414863B24C1956A0020506E /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8414863A24C1956A0020506E /* HeaderView.swift */; };
+		8414863D24C1B04D0020506E /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8414863C24C1B04D0020506E /* CategoryCell.swift */; };
 		84D47EE024AF16EC0080535A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D47EDF24AF16EC0080535A /* AppDelegate.swift */; };
 		84D47EE224AF16EC0080535A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D47EE124AF16EC0080535A /* SceneDelegate.swift */; };
 		84D47EE424AF16EC0080535A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D47EE324AF16EC0080535A /* ViewController.swift */; };
@@ -19,6 +21,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8414863A24C1956A0020506E /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		8414863C24C1B04D0020506E /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
 		84D47EDC24AF16EC0080535A /* CompLayoutTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CompLayoutTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84D47EDF24AF16EC0080535A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		84D47EE124AF16EC0080535A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -72,6 +76,8 @@
 				84D47EF924AF288F0080535A /* CollectionViewCell.swift */,
 				84D47EFB24AF2B3B0080535A /* BigMovieCell.swift */,
 				84D47EFC24AF2B3B0080535A /* BigMovieCell.xib */,
+				8414863A24C1956A0020506E /* HeaderView.swift */,
+				8414863C24C1B04D0020506E /* CategoryCell.swift */,
 			);
 			path = CompLayoutTest;
 			sourceTree = "<group>";
@@ -149,7 +155,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				84D47EE424AF16EC0080535A /* ViewController.swift in Sources */,
+				8414863B24C1956A0020506E /* HeaderView.swift in Sources */,
 				84D47EFA24AF288F0080535A /* CollectionViewCell.swift in Sources */,
+				8414863D24C1B04D0020506E /* CategoryCell.swift in Sources */,
 				84D47EFD24AF2B3B0080535A /* BigMovieCell.swift in Sources */,
 				84D47EE024AF16EC0080535A /* AppDelegate.swift in Sources */,
 				84D47EE224AF16EC0080535A /* SceneDelegate.swift in Sources */,
